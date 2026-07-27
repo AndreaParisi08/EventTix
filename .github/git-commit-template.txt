@@ -1,4 +1,6 @@
-<type>(<scope>): <subject>
+
+# --- Format ---
+#type(scope): subject
 
 # --- WHY is this change required? ---
 
