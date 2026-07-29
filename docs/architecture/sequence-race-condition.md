@@ -2,7 +2,10 @@
 
 This diagram illustrates how EventTix handles race conditions when two concurrent clients ("User A" and "User B") attempt to reserve the exact same seat (`SEAT-42A`) simultaneously.
 
+<div align="center" style="background-color: #ffffff; padding: 20px; border-radius: 8px; color: #000000;">
+
 ```mermaid
+%%{init: {'theme': 'neutral'}}%%
 sequenceDiagram
     autonumber
     actor UserA as Buyer A
@@ -10,37 +13,29 @@ sequenceDiagram
     participant API as Booking Service API
     participant Redis as Redis (Redlock)
     participant DB as PostgreSQL DB
-    participant Outbox as Outbox Table
 
-    Note over UserA, UserB: Both users click "Reserve Seat-42A" at the exact same millisecond
+    Note over UserA, UserB: Concurrent requests for Seat-42A at exact same millisecond
 
-    par Concurrent Request Execution
-        UserA->>API: POST /api/v1/bookings { seatId: "SEAT-42A" }
-    and
-        UserB->>API: POST /api/v1/bookings { seatId: "SEAT-42A" }
-    end
+    UserA->>API: POST /api/v1/bookings (Seat-42A)
+    UserB->>API: POST /api/v1/bookings (Seat-42A)
 
-    rect rgb(220, 255, 220)
-        Note over API, Redis: Race Condition Interception Layer
-        API->>Redis: SET lock:seat:SEAT-42A NX PX 300000 (User A)
-        Redis-->>API: OK (Lock Acquired for User A)
-        
-        API->>Redis: SET lock:seat:SEAT-42A NX PX 300000 (User B)
-        Redis-->>API: NIL (Lock Failed for User B)
-    end
+    Note over API, Redis: 1. Race Condition Interception (In-Memory)
+    API->>Redis: SET lock:seat:SEAT-42A (User A)
+    Redis-->>API: OK (Lock Acquired)
+    
+    API->>Redis: SET lock:seat:SEAT-42A (User B)
+    Redis-->>API: NIL (Lock Failed)
 
-    rect rgb(255, 220, 220)
-        Note over API, UserB: Fast-Fail Execution (User B)
-        API-->>UserB: HTTP 409 Conflict { error: "Seat already reserved" }
-        Note over UserB, DB: Zero SQL queries or DB connections opened for User B!
-    end
+    Note over API, UserB: 2. Fast-Fail Execution (User B)
+    API-->>UserB: 409 Conflict (Seat already reserved)
 
-    rect rgb(220, 240, 255)
-        Note over API, DB: Transactional Write (User A)
-        API->>DB: BEGIN TRANSACTION
-        API->>DB: INSERT INTO Orders (Id, SeatId, Status) VALUES (..., 'SEAT-42A', 'PENDING')
-        API->>DB: INSERT INTO OutboxMessages (EventPayload, Status) VALUES ('OrderCreated', 'PENDING')
-        API->>DB: COMMIT TRANSACTION
-        DB-->>API: Success
-        API-->>UserA: HTTP 201 Created { orderId: "...", expiresAt: "..." }
-    end
+    Note over API, DB: 3. Atomic Transaction Write (User A)
+    API->>DB: BEGIN TRANSACTION
+    API->>DB: INSERT Order (Seat-42A, PENDING)
+    API->>DB: INSERT OutboxMessage (OrderCreated)
+    API->>DB: COMMIT TRANSACTION
+    DB-->>API: Success
+    API-->>UserA: 201 Created (Order Reserved)
+```
+
+</div>
