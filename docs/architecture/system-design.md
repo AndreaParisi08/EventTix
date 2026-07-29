@@ -9,16 +9,31 @@ This document provides a comprehensive overview of the architectural principles,
 EventTix is built using **Domain-Driven Design (DDD)** principles and **Clean Architecture** (Ports & Adapters). 
 Each microservice is strictly isolated into four distinct layers:
 
-[ EventTix.Booking.API ]           --> HTTP, Routing, DTOs, Middleware
-│
-▼
-[ EventTix.Booking.Application ]   --> CQRS (MediatR), Use Cases, Validation
-│
-▼
-[ EventTix.Booking.Domain ]        --> Entities, Aggregates, Value Objects, Domain Events
-▲
-│
-[ EventTix.Booking.Infrastructure] --> EF Core (PostgreSQL), StackExchange.Redis, MassTransit
+```mermaid
+%%{init: {'theme': 'neutral'}}%%
+flowchart TD
+    subgraph Outer ["Outer Layers (Infrastructure & Entry Points)"]
+        API["<b>EventTix.Booking.API</b><br/><i>HTTP, Minimal APIs, DTOs, Middleware</i>"]
+        INF["<b>EventTix.Booking.Infrastructure</b><br/><i>EF Core, StackExchange.Redis, MassTransit</i>"]
+    end
+
+    subgraph Middle ["Use Case Layer"]
+        APP["<b>EventTix.Booking.Application</b><br/><i>CQRS (MediatR), Commands/Queries, FluentValidation</i>"]
+    end
+
+    subgraph Core ["Core Domain (Zero External Dependencies)"]
+        DOM["<b>EventTix.Booking.Domain</b><br/><i>Entities, Aggregates, Value Objects, Domain Events</i>"]
+    end
+
+    API -->|Triggers Use Cases| APP
+    API -->|Configures DI| INF
+    INF -->|Implements Interfaces| APP
+    INF -->|Persists Aggregates| DOM
+    APP -->|Executes Rules| DOM
+
+    style DOM fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
+    style APP fill:#f3e5f5,stroke:#7b1fa2,stroke-width:1.5px
+```
 
 ### Layer Responsibilities
 * **Domain:** Contains pure enterprise business logic and domain models. Zero external dependencies.
