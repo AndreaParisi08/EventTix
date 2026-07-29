@@ -60,12 +60,12 @@ The domain is partitioned into 4 distinct Bounded Contexts:
 
 1. **Distributed Concurrency Control (Redlock):** 
    Requests targeting the same seat resource are intercepted at the memory layer via Redis Redlock before reaching database connections.
-   * See [ADR-0002: Redis Redlock vs SQL Locking](./adr/0002-redis-redlock-vs-sql-locking.md).
-   * See [Sequence Diagram: Seat Contention](./architecture/sequence-race-condition.md).
+   * See [ADR-0002: Redis Redlock vs SQL Locking](../adr/0002-redis-redlock-vs-sql-locking.md).
+   * See [Sequence Diagram: Seat Contention](./diagrams/sequence-race-condition.md).
 
 2. **Distributed Transaction Management (Saga Orchestration):** 
    Distributed operations across Booking and Payment Gateway are managed by a centralized MassTransit State Machine.
-   * See [ADR-0001: Saga Orchestration vs Choreography](./adr/0001-saga-orchestration-vs-choreography.md).
+   * See [ADR-0001: Saga Orchestration vs Choreography](../adr/0001-saga-orchestration-vs-choreography.md).
 
 3. **Transactional Outbox Pattern:** 
    Guarantees *At-Least-Once* delivery of Domain Events to RabbitMQ without requiring distributed 2PC transactions.
@@ -74,6 +74,6 @@ The domain is partitioned into 4 distinct Bounded Contexts:
 
 ## 4. Architectural Decision Records (ADR Index)
 
-* [ADR-0000: ADR Template](./adr/0000-template.md)
-* [ADR-0001: Saga Orchestration vs. Choreography](./adr/0001-saga-orchestration-vs-choreography.md)
-* [ADR-0002: Distributed Locking Strategy (Redis Redlock)](./adr/0002-redis-redlock-vs-sql-locking.md)
+* [ADR-0000: ADR Template](../adr/0000-template.md)
+* [ADR-0001: Saga Orchestration vs. Choreography](../adr/0001-saga-orchestration-vs-choreography.md)
+* [ADR-0002: Distributed Locking Strategy (Redis Redlock)](../adr/0002-redis-redlock-vs-sql-locking.md)

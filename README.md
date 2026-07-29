@@ -2,7 +2,7 @@
 
 > **A production-ready, event-driven .NET architecture designed to eliminate high-concurrency seat reservation race conditions and deliver resilient, multi-tenant webhooks with transactional guarantees.**
 
-[![.NET 9.0](https://img.shields.io/badge/.NET-9.0-512BD4?style=for-the-badge&logo=dotnet)](https://dotnet.microsoft.com/)
+[![.NET 10.0](https://img.shields.io/badge/.NET-10.0-512BD4?style=for-the-badge&logo=dotnet)](https://dotnet.microsoft.com/)
 [![Architecture](https://img.shields.io/badge/Architecture-Event--Driven%20%7C%20Saga%20%7C%20Outbox-blue?style=for-the-badge)](#system-architecture)
 [![Docker](https://img.shields.io/badge/Docker-Compose%20Ready-2496ED?style=for-the-badge&logo=docker)](./docker-compose.yml)
 [![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](#license)
@@ -30,8 +30,8 @@ flowchart TD
 
 ## 💻 Tech Stack
 
-* **Framework:** .NET 9.0 (C#)
-* **Data Access:** Entity Framework Core 9, Dapper, PostgreSQL 16
+* **Framework:** .NET 10.0 (C#)
+* **Data Access:** Entity Framework Core 10, Dapper, PostgreSQL 16
 * **Messaging & Async:** RabbitMQ 3.12, MassTransit 8.x
 * **Caching & Locking:** Redis 7.0 (StackExchange.Redis, Redlock.net)
 * **Resilience & Security:** Polly (Exponential Backoff, Circuit Breaker), HMAC-SHA256 Signing
@@ -42,26 +42,26 @@ flowchart TD
 ## 🚀 Quick Start (Local Setup)
 
 ### Prerequisites
-* [.NET 9.0 SDK](https://dotnet.microsoft.com/download)
+* [.NET 10.0 SDK](https://dotnet.microsoft.com/download)
 * [Docker Desktop](https://www.docker.com/products/docker-desktop/)
 
 ### 1. Clone & Start Infrastructure
 ```bash
 git clone [https://github.com/your-username/EventTix.git](https://github.com/your-username/EventTix.git)
 cd EventTix
-```
 
 # Start PostgreSQL, Redis, RabbitMQ, and MockServer
 docker compose up -d
+```
 
 ### 2. Verify Services
 Once running, you can access the local infrastructure management dashboards:
-* **RabbitMQ Management:** `http://localhost:15672` (Guest / Guest)
-* **Mock Webhook Receiver:** `http://localhost:1080`
+* **RabbitMQ Management:** `http://localhost:15672` (`eventtix` / `eventtix_dev_password`)
+* **Mock Webhook Receiver / Payment Gateway:** `http://localhost:1080`
 
 ### 3. Run the Solution
 ```bash
-dotnet run --project src/Services/EventTix.Booking.API
+dotnet run --project src/Services/Booking/EventTix.Booking.Api
 ```
 
 ## 📑 Architecture Decision Records (ADRs)
@@ -69,4 +69,4 @@ dotnet run --project src/Services/EventTix.Booking.API
 Key architectural choices are documented in detail within the [`/docs/adr`](./docs/adr) directory:
 
 * [**ADR-001:** Saga Orchestration vs. Choreography for Booking Workflow](./docs/adr/0001-saga-orchestration-vs-choreography.md)
-* [**ADR-002:** Distributed Locking via Redis (Redlock) vs. Database Pessimistic Locking](./docs/adr/0002-redis-redlock-vs-sql-locking.md) *(Coming Next)*
+* [**ADR-002:** Distributed Locking via Redis (Redlock) vs. Database Pessimistic Locking](./docs/adr/0002-redis-redlock-vs-sql-locking.md)
