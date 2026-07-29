@@ -1,9 +1,5 @@
 # ADR-0000: [Short Title of the Architecture Decision]
 
-* **Status:** [Proposed | Approved | Rejected | Superseded by ADR-XXXX]
-* **Date:** [YYYY-MM-DD]
-* **Deciders:** [Architect Name / Team]
-
 ---
 
 ## Context and Problem Statement
