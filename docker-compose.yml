@@ -1,7 +1,7 @@
 version: '3.8'
 
 services:
-  # Database Relazionale principale per Booking, Catalog e Outbox
+  # Database Relazionale principale per Booking, Catalog e Outbox Pattern
   postgres:
     image: postgres:16-alpine
     container_name: eventtix-postgres
@@ -51,7 +51,8 @@ services:
       timeout: 5s
       retries: 5
 
-  # Mock per il Gateway di Pagamento terzo e Webhook organzzatore
+  # Mock per il Gateway di Pagamento terzo e Webhook organizzatore
+  # Simula le chiamate API verso il Payment Gateway e i Webhook dell'organizzatore per testare l'integrazione senza dipendere da servizi esterni.
   mockserver:
     image: mockserver/mockserver:5.15.0
     container_name: eventtix-mockserver
