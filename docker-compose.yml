@@ -1,0 +1,66 @@
+version: '3.8'
+
+services:
+  # Database Relazionale principale per Booking, Catalog e Outbox
+  postgres:
+    image: postgres:16-alpine
+    container_name: eventtix-postgres
+    environment:
+      POSTGRES_USER: eventtix
+      POSTGRES_PASSWORD: eventtix_dev_password
+      POSTGRES_DB: eventtix_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U eventtix -d eventtix_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # Cache in-memory e Distributed Locking (Redlock)
+  redis:
+    image: redis:7-alpine
+    container_name: eventtix-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # Message Broker per la comunicazione asincrona ed eventi di dominio (MassTransit)
+  rabbitmq:
+    image: rabbitmq:3.12-management-alpine
+    container_name: eventtix-rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: eventtix
+      RABBITMQ_DEFAULT_PASS: eventtix_dev_password
+    ports:
+      - "5672:5672"   # AMQP protocol
+      - "15672:15672" # Management UI
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Mock per il Gateway di Pagamento terzo e Webhook organzzatore
+  mockserver:
+    image: mockserver/mockserver:5.15.0
+    container_name: eventtix-mockserver
+    ports:
+      - "1080:1080"
+    environment:
+      MOCKSERVER_SERVER_PORT: 1080
+
+volumes:
+  postgres_data:
+  redis_data:
+  rabbitmq_data:
