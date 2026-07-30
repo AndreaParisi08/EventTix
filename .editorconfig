@@ -1,0 +1,4 @@
+﻿[*.cs]
+
+# IDE0290: Usa costruttore primario
+dotnet_diagnostic.IDE0290.severity = none
