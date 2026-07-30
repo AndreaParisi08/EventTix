@@ -5,6 +5,10 @@ using MediatR;
 
 namespace EventTix.Booking.Application.Bookings.Commands.ReserveSeat;
 
+/// <summary>
+/// Handles the <see cref="ReserveSeatCommand"/> to orchestrate high-concurrency seat reservations.
+/// Leverages distributed locking to prevent seat contention before persisting the aggregate.
+/// </summary>
 public sealed class ReserveSeatCommandHandler : IRequestHandler<ReserveSeatCommand, ReserveSeatResponse>
 {
     private readonly IDistributedLockService _lockService;
@@ -18,6 +22,15 @@ public sealed class ReserveSeatCommandHandler : IRequestHandler<ReserveSeatComma
         _bookingRepository = bookingRepository;
     }
 
+    /// <summary>
+    /// Executes the seat reservation workflow under concurrency protection.
+    /// </summary>
+    /// <param name="request">The incoming command containing seat, user, and pricing information.</param>
+    /// <param name="cancellationToken">A token to observe while waiting for the task to complete.</param>
+    /// <returns>A <see cref="ReserveSeatResponse"/> containing the details of the reserved booking.</returns>
+    /// <exception cref="SeatAlreadyLockedException">
+    /// Thrown when the targeted seat is already locked by another process or user.
+    /// </exception>
     public async Task<ReserveSeatResponse> Handle(ReserveSeatCommand request, CancellationToken cancellationToken)
     {
         var seatId = SeatId.From(request.SeatId);
