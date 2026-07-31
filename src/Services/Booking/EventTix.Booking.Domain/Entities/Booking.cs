@@ -7,9 +7,9 @@ namespace EventTix.Booking.Domain.Entities;
 
 public sealed class Booking : AggregateRoot<Guid>
 {
-    public SeatId SeatId { get; private set; }
-    public UserId UserId { get; private set; }
-    public Money Price { get; private set; }
+    public UserId UserId { get; private set; } = null!;
+    public SeatId SeatId { get; private set; } = null!;
+    public Money Price { get; private set; } = null!;
     public BookingStatus Status { get; private set; }
     public DateTime CreatedAt { get; private set; }
     public DateTime ExpiresAt { get; private set; }
