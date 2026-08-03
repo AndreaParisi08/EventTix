@@ -10,15 +10,22 @@ namespace EventTix.Booking.Application
         {
             var assembly = typeof(DependencyInjection).Assembly;
 
-            // 1. Registrazione di MediatR e della Pipeline di Validazione
+            // 1. Register FluentValidation Validators from this assembly
+            services.AddValidatorsFromAssembly(assembly);
+
+            // 2. Register MediatR & Pipeline Behaviors in order
             services.AddMediatR(x =>
             {
                 x.RegisterServicesFromAssembly(assembly);
+
+                // Step 1: Validate incoming command payload
+                x.AddOpenBehavior(typeof(ValidationPipelineBehavior<,>));
+
+                // Step 2: Intercept idempotent requests via Redis
                 x.AddOpenBehavior(typeof(IdempotentCommandBehavior<,>));
             });
 
-            // 2. Registrazione automatica di tutti i FluentValidators presenti nel progetto
-            services.AddValidatorsFromAssembly(assembly);
+            
 
             return services;
         }
