@@ -1,4 +1,4 @@
-﻿using EventTix.Booking.Application.Exceptions;
+using EventTix.Booking.Application.Exceptions;
 using FluentValidation;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
@@ -21,31 +21,45 @@ public sealed class GlobalExceptionHandler : IExceptionHandler
     {
         _logger.LogError(exception, "Unhandled exception: {Message}", exception.Message);
 
-        var (statusCode, problemDetails) = exception switch
+        if (exception is ValidationException validationEx)
         {
-            ValidationException validationEx => (
-                StatusCodes.Status400BadRequest,
-                CreateValidationProblemDetails(httpContext, validationEx)),
+            var validationProblemDetails = CreateValidationProblemDetails(httpContext, validationEx);
 
+            httpContext.Response.StatusCode = StatusCodes.Status400BadRequest;
+            await httpContext.Response.WriteAsJsonAsync(validationProblemDetails, cancellationToken);
+
+            return true;
+        }
+
+        var (statusCode, title, detail) = exception switch
+        {
             SeatAlreadyLockedException lockEx => (
                 StatusCodes.Status409Conflict,
-                new ProblemDetails
-                {
-                    Status = StatusCodes.Status409Conflict,
-                    Title = "Seat Collision",
-                    Detail = lockEx.Message,
-                    Instance = httpContext.Request.Path
-                }),
+                "Seat Collision",
+                lockEx.Message),
+
+            InvalidOperationException invalidEx => (
+                StatusCodes.Status409Conflict,
+                "Business Rule Violation",
+                invalidEx.Message),
+
+            ArgumentException argEx => (
+                StatusCodes.Status400BadRequest,
+                "Invalid Request Payload",
+                argEx.Message),
 
             _ => (
                 StatusCodes.Status500InternalServerError,
-                new ProblemDetails
-                {
-                    Status = StatusCodes.Status500InternalServerError,
-                    Title = "Server Error",
-                    Detail = "An unexpected error occurred.",
-                    Instance = httpContext.Request.Path
-                })
+                "Server Error",
+                "An unexpected error occurred.")
+        };
+
+        var problemDetails = new ProblemDetails
+        {
+            Status = statusCode,
+            Title = title,
+            Detail = detail,
+            Instance = httpContext.Request.Path
         };
 
         httpContext.Response.StatusCode = statusCode;
