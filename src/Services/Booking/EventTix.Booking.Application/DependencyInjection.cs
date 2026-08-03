@@ -14,7 +14,7 @@ namespace EventTix.Booking.Application
             services.AddMediatR(x =>
             {
                 x.RegisterServicesFromAssembly(assembly);
-                x.AddOpenBehavior(typeof(ValidationPipelineBehavior<,>));
+                x.AddOpenBehavior(typeof(IdempotentCommandBehavior<,>));
             });
 
             // 2. Registrazione automatica di tutti i FluentValidators presenti nel progetto
