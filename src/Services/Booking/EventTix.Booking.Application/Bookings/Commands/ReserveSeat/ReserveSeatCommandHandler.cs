@@ -13,13 +13,16 @@ public sealed class ReserveSeatCommandHandler : IRequestHandler<ReserveSeatComma
 {
     private readonly IDistributedLockService _lockService;
     private readonly IBookingRepository _bookingRepository;
+    private readonly IUnitOfWork _unitOfWork;
 
     public ReserveSeatCommandHandler(
         IDistributedLockService lockService,
-        IBookingRepository bookingRepository)
+        IBookingRepository bookingRepository,
+        IUnitOfWork unitOfWork)
     {
         _lockService = lockService;
         _bookingRepository = bookingRepository;
+        _unitOfWork = unitOfWork;
     }
 
     /// <summary>
@@ -37,29 +40,35 @@ public sealed class ReserveSeatCommandHandler : IRequestHandler<ReserveSeatComma
         var userId = UserId.From(request.UserId);
         var price = Money.EUR(request.Amount);
 
-        // 1. Construct the unique distributed lock resource key for the target seat
+        // Lock resource key for the target seat
         string lockKey = $"lock:seat:{seatId.Value}";
 
-        // 2. Attempt to acquire the distributed lock via Redis Redlock
-        // WaitTime = TimeSpan.Zero enforces a fail-fast policy to eliminate database connection queuing
+        // 1. Acquire distributed lock for the specific seat (TTL: 5s, Wait: 1s)
         await using var lockHandle = await _lockService.AcquireLockAsync(
             resourceKey: lockKey,
-            expiryTime: TimeSpan.FromMinutes(5),
-            waitTime: TimeSpan.Zero,
+            expiryTime: TimeSpan.FromSeconds(5),
+            waitTime: TimeSpan.FromSeconds(1),
             cancellationToken: cancellationToken);
 
         if (lockHandle is null)
         {
-            // Another thread/instance acquired the lock first; trigger a concurrency exception
             throw new SeatAlreadyLockedException(seatId.Value);
+        }
+
+        // 2. Is the seat already booked in DB?
+        bool isAlreadyReserved = await _bookingRepository.IsSeatReservedAsync(seatId, cancellationToken);
+        if (isAlreadyReserved)
+        {
+            throw new InvalidOperationException($"Seat '{seatId.Value}' is no longer available.");
         }
 
         // 3. Instantiate the Domain Aggregate (initialized in PENDING state with a 5-minute hold)
         var booking = Domain.Entities.Booking.CreatePending(seatId, userId, price);
 
-        // 4. Persist the new aggregate via the repository
+        // 4. Persist the new aggregate via the repository and save changes atomically
         await _bookingRepository.AddAsync(booking, cancellationToken);
-        await _bookingRepository.SaveChangesAsync(cancellationToken);
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
+
 
         // 5. Map the domain entity state to the output response DTO
         return new ReserveSeatResponse(
