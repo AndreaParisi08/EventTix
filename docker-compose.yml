@@ -61,6 +61,29 @@ services:
     environment:
       MOCKSERVER_SERVER_PORT: 1080
 
+  # Microservizio Booking API (Disponibile tramite profilo "full")
+  booking-api:
+    profiles: ["full"]
+    image: eventtix-booking-api:latest
+    container_name: eventtix-booking-api
+    build:
+      context: ./src
+      dockerfile: Services/Booking/EventTix.Booking.Api/Dockerfile
+    ports:
+      - "5000:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      # Sovrascrive i ConnectionString di appsettings.json usando il nome dei container Docker
+      - ConnectionStrings__Database=Host=postgres;Port=5432;Database=eventtix_db;Username=eventtix;Password=eventtix_dev_password
+      - ConnectionStrings__Redis=redis:6379
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+
 volumes:
   postgres_data:
   redis_data:

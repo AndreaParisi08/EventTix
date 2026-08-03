@@ -13,7 +13,7 @@ public class IdempotentCommandBehavior<TRequest, TResponse> : IPipelineBehavior<
     where TRequest : IIdempotentCommand<TResponse>
 {
     private readonly IConnectionMultiplexer _redis;
-    private static readonly TimeSpan CacheDuration = TimeSpan.FromHours(1);
+    private static readonly TimeSpan CacheDuration = TimeSpan.FromHours(24);
 
     public IdempotentCommandBehavior(IConnectionMultiplexer redis)
     {

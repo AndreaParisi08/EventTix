@@ -1,5 +1,4 @@
 ﻿using EventTix.Booking.Application.Abstractions;
-using MediatR;
 
 namespace EventTix.Booking.Application.Bookings.Commands.ReserveSeat
 {
