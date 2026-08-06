@@ -155,3 +155,10 @@ Key architectural choices are documented in detail within the [`/docs/adr`](./do
 * **[EPIC-04] Payment & MassTransit Saga Orchestration:** Distributed state machine with 5-min timeout compensation workflows.
 * **[EPIC-05] Multi-Tenant Webhook Delivery Engine:** HMAC-SHA256 signed delivery, Polly retries & per-tenant Redis Lua rate limiting.
 * **[EPIC-06] Infrastructure & Observability:** Distributed OpenTelemetry tracing & k6 load testing suite.
+
+---
+
+## 🎯 Project Management & Backlog
+
+The complete project lifecycle, user story decomposition, and architectural tasks are managed on Notion:  
+👉 **[View Public EventTix Notion Workspace](https://your-notion-link-here)**
