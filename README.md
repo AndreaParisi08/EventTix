@@ -141,9 +141,10 @@ docker exec -it eventtix-postgres psql -U eventtix -d eventtix_db
 
 Key architectural choices are documented in detail within the [`/docs/adr`](./docs/adr) directory:
 
-* [**ADR-001:** Saga Orchestration vs. Choreography for Booking Workflow](./docs/adr/0001-saga-orchestration-vs-choreography.md)
-* [**ADR-002:** Distributed Locking via Redis (Redlock) vs. Database Pessimistic Locking](./docs/adr/0002-redis-redlock-vs-sql-locking.md)
-
+* [**ADR-0001:** Minimal APIs + CQRS (MediatR) vs. N-Tier Controllers](./docs/adr/0001-cqrs-minimal-apis-vs-ntier-controllers.md)
+* [**ADR-0002:** Value Objects Implemented as Readonly Record Structs](./docs/adr/0002-value-objects-readonly-record-structs.md)
+* [**ADR-0003:** Distributed Locking via Redis (Redlock) vs. Database Locking](./docs/adr/0003-redis-redlock-vs-sql-locking.md)
+* [**ADR-0004:** Hybrid Persistence Strategy (EF Core Writes, Dapper Reads)](./docs/adr/0004-hybrid-orm-efcore-writes-dapper-reads.md)
 ---
 
 ## 🗺️ Epics & System Capabilities
