@@ -1,6 +1,6 @@
 ﻿namespace EventTix.Booking.Domain.ValueObjects;
 
-public sealed record SeatId
+public readonly record struct SeatId
 {
     public string Value { get; }
 

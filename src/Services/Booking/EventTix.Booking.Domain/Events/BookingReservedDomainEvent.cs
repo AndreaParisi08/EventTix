@@ -1,4 +1,4 @@
-﻿using EventTix.Booking.Domain.Common;
+﻿using EventTix.BuildingBlocks.Domain;
 
 namespace EventTix.Booking.Domain.Events;
 

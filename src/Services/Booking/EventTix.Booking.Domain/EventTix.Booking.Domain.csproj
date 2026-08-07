@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\EventTix.BuildingBlocks.Application\EventTix.BuildingBlocks.csproj" />
+  </ItemGroup>
+
 </Project>

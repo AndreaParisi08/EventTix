@@ -1,20 +1,22 @@
-﻿using EventTix.Booking.Domain.Common;
-using EventTix.Booking.Domain.Enums;
+﻿using EventTix.Booking.Domain.Enums;
 using EventTix.Booking.Domain.Events;
 using EventTix.Booking.Domain.ValueObjects;
+using EventTix.BuildingBlocks.Domain;
 
 namespace EventTix.Booking.Domain.Entities;
 
 public sealed class Booking : AggregateRoot<Guid>
 {
-    public UserId UserId { get; private set; } = null!;
-    public SeatId SeatId { get; private set; } = null!;
-    public Money Price { get; private set; } = null!;
+    public UserId UserId { get; private set; } 
+    public SeatId SeatId { get; private set; } 
+    public Money Price { get; private set; } 
     public BookingStatus Status { get; private set; }
     public DateTime CreatedAt { get; private set; }
     public DateTime ExpiresAt { get; private set; }
 
+    #pragma warning disable CS8618 // Costruttore privato richiesto esclusivamente da EF Core per la materializzazione
     private Booking() { }
+    #pragma warning restore CS8618
 
     private Booking(Guid id, SeatId seatId, UserId userId, Money price, TimeSpan holdDuration)
     {
