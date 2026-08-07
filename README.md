@@ -161,4 +161,4 @@ Key architectural choices are documented in detail within the [`/docs/adr`](./do
 ## 🎯 Project Management & Backlog
 
 The complete project lifecycle, user story decomposition, and architectural tasks are managed on Notion:  
-👉 **[View Public EventTix Notion Workspace]([https://proximal-sled-2b9.notion.site/EventTix-Project-3b350b09d88680fbb0acdff92c557bac?source=copy_link])**
+👉 **[View Public EventTix Notion Workspace](https://proximal-sled-2b9.notion.site/EventTix-Project-3b350b09d88680fbb0acdff92c557bac?source=copy_link)**
