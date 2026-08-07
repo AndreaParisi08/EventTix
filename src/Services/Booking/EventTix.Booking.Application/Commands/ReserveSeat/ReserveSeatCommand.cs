@@ -1,6 +1,6 @@
-﻿using EventTix.Booking.Application.Abstractions;
+﻿using EventTix.BuildingBlocks.Application.Abstractions;
 
-namespace EventTix.Booking.Application.Bookings.Commands.ReserveSeat
+namespace EventTix.Booking.Application.Commands.ReserveSeat
 {
     public sealed record ReserveSeatCommand(
     string SeatId,

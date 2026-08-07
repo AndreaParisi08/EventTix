@@ -1,10 +1,9 @@
-﻿namespace EventTix.Booking.Infrastructure.Persistence.Configuration;
-
-using EventTix.Booking.Domain.ValueObjects;
+﻿using EventTix.Booking.Domain.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using BookingEntity = EventTix.Booking.Domain.Entities.Booking;
 
+namespace EventTix.Booking.Infrastructure.Persistence;
 /// <summary>
 /// Entity Framework Core mapping configuration for the <see cref="BookingEntity"/> aggregate root.
 /// </summary>
@@ -30,8 +29,8 @@ public sealed class BookingConfiguration : IEntityTypeConfiguration<BookingEntit
             .HasColumnName("user_id")
             .IsRequired();
 
-        // Owned Value Object for Money
-        builder.OwnsOne(b => b.Price, priceBuilder =>
+        // Complex Value Object for Money
+        builder.ComplexProperty(b => b.Price, priceBuilder =>
         {
             priceBuilder.Property(m => m.Amount)
                 .HasColumnName("price_amount")

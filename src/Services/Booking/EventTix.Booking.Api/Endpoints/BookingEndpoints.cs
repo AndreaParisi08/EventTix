@@ -1,6 +1,6 @@
 ﻿namespace EventTix.Booking.Api.Endpoints;
 
-using EventTix.Booking.Application.Bookings.Commands.ReserveSeat;
+using EventTix.Booking.Application.Commands.ReserveSeat;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 

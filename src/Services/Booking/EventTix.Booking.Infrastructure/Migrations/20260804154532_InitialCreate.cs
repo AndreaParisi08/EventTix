@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
@@ -32,7 +31,7 @@ namespace EventTix.Booking.Infrastructure.Migrations
             migrationBuilder.CreateIndex(
                 name: "ix_bookings_seat_id_status",
                 table: "bookings",
-                columns: new[] { "seat_id", "status" });
+                columns: ["seat_id", "status"]);
         }
 
         /// <inheritdoc />

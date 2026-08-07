@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace EventTix.Booking.Application.Bookings.Commands.ReserveSeat;
+namespace EventTix.Booking.Application.Commands.ReserveSeat;
 
 public sealed class ReserveSeatCommandValidator : AbstractValidator<ReserveSeatCommand>
 {

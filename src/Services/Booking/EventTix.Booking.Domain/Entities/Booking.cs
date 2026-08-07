@@ -14,9 +14,7 @@ public sealed class Booking : AggregateRoot<Guid>
     public DateTime CreatedAt { get; private set; }
     public DateTime ExpiresAt { get; private set; }
 
-    #pragma warning disable CS8618 // Costruttore privato richiesto esclusivamente da EF Core per la materializzazione
     private Booking() { }
-    #pragma warning restore CS8618
 
     private Booking(Guid id, SeatId seatId, UserId userId, Money price, TimeSpan holdDuration)
     {

@@ -3,7 +3,7 @@ using EventTix.Booking.Application.Exceptions;
 using EventTix.Booking.Domain.ValueObjects;
 using MediatR;
 
-namespace EventTix.Booking.Application.Bookings.Commands.ReserveSeat;
+namespace EventTix.Booking.Application.Commands.ReserveSeat;
 
 /// <summary>
 /// Handles the <see cref="ReserveSeatCommand"/> to orchestrate high-concurrency seat reservations.

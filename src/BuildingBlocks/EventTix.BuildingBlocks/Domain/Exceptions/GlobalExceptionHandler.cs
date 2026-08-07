@@ -1,9 +1,10 @@
-using EventTix.Booking.Application.Exceptions;
+namespace EventTix.BuildingBlocks.Domain.Exceptions;
+
 using FluentValidation;
 using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-
-namespace EventTix.Booking.Api.Middleware;
+using Microsoft.Extensions.Logging;
 
 public sealed class GlobalExceptionHandler : IExceptionHandler
 {
@@ -33,10 +34,11 @@ public sealed class GlobalExceptionHandler : IExceptionHandler
 
         var (statusCode, title, detail) = exception switch
         {
-            SeatAlreadyLockedException lockEx => (
+            // Cattura qualsiasi eccezione di tipo "Conflict" (es. SeatAlreadyLockedException)
+            ConflictException conflictEx => (
                 StatusCodes.Status409Conflict,
-                "Seat Collision",
-                lockEx.Message),
+                "Conflict",
+                conflictEx.Message),
 
             InvalidOperationException invalidEx => (
                 StatusCodes.Status409Conflict,

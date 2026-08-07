@@ -1,6 +1,6 @@
-﻿namespace EventTix.Booking.Application.Bookings.Behaviors;
+﻿namespace EventTix.BuildingBlocks.Application.Behaviors;
 
-using EventTix.Booking.Application.Abstractions;
+using EventTix.BuildingBlocks.Application.Abstractions;
 using MediatR;
 using StackExchange.Redis;
 using System.Text.Json;

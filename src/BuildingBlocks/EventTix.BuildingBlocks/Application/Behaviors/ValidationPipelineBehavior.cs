@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using MediatR;
 
-namespace EventTix.Booking.Application.Bookings.Behaviors
+namespace EventTix.BuildingBlocks.Application.Behaviors
 {
     public sealed class ValidationPipelineBehavior<TRequest, TResponse>
         : IPipelineBehavior<TRequest, TResponse> where TRequest : notnull 

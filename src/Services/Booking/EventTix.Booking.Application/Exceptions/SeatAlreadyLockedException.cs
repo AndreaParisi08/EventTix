@@ -1,6 +1,8 @@
-﻿namespace EventTix.Booking.Application.Exceptions;
+﻿using EventTix.BuildingBlocks.Domain.Exceptions;
 
-public sealed class SeatAlreadyLockedException : Exception
+namespace EventTix.Booking.Application.Exceptions;
+
+public sealed class SeatAlreadyLockedException : ConflictException
 {
     public string SeatId { get; }
 

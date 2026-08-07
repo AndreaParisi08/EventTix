@@ -1,4 +1,4 @@
-﻿namespace EventTix.Booking.Application.Bookings.Commands.ReserveSeat
+﻿namespace EventTix.Booking.Application.Commands.ReserveSeat
 {
     public sealed record ReserveSeatResponse(
     Guid BookingId,

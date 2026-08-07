@@ -1,13 +1,16 @@
 <Solution>
-  <Folder Name="/Solution Items/">
-    <File Path=".editorconfig" />
-  </Folder>
   <Folder Name="/src/" />
+  <Folder Name="/src/BuildingBlocks/">
+    <Project Path="src/BuildingBlocks/EventTix.BuildingBlocks/EventTix.BuildingBlocks.csproj" />
+  </Folder>
   <Folder Name="/src/Services/" />
   <Folder Name="/src/Services/Booking/">
     <Project Path="src/Services/Booking/EventTix.Booking.Api/EventTix.Booking.Api.csproj" />
     <Project Path="src/Services/Booking/EventTix.Booking.Application/EventTix.Booking.Application.csproj" />
     <Project Path="src/Services/Booking/EventTix.Booking.Domain/EventTix.Booking.Domain.csproj" />
     <Project Path="src/Services/Booking/EventTix.Booking.Infrastructure/EventTix.Booking.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/EventTix.Booking.UnitTests/EventTix.Booking.UnitTests.csproj" />
   </Folder>
 </Solution>

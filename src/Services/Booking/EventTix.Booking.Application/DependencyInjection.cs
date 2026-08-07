@@ -1,4 +1,4 @@
-﻿using EventTix.Booking.Application.Bookings.Behaviors;
+﻿using EventTix.BuildingBlocks.Application.Behaviors;
 using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 

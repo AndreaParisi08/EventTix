@@ -1,4 +1,4 @@
-﻿namespace EventTix.Booking.Application.Abstractions;
+﻿namespace EventTix.BuildingBlocks.Application.Abstractions;
 
 using MediatR;
 
