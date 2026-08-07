@@ -2,7 +2,7 @@ using EventTix.Booking.Api.Endpoints;
 using EventTix.Booking.Application;
 using EventTix.Booking.Infrastructure;
 using EventTix.Booking.Infrastructure.Persistence;
-using EventTix.BuildingBlocks.Domain.Exceptions;
+using EventTix.BuildingBlocks.Web;
 using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.EntityFrameworkCore;

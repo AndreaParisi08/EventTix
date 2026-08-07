@@ -1,7 +1,7 @@
 ﻿using EventTix.Booking.Application.Abstractions;
 using StackExchange.Redis;
 
-namespace EventTix.Booking.Infrastructure.Locking
+namespace EventTix.BuildingBlocks.Infrastructure.Locking
 {
     public sealed class RedisDistributedLockService : IDistributedLockService
     {

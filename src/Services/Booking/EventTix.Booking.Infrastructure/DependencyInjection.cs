@@ -1,9 +1,9 @@
 ﻿namespace EventTix.Booking.Infrastructure;
 
 using EventTix.Booking.Application.Abstractions;
-using EventTix.Booking.Infrastructure.Locking;
 using EventTix.Booking.Infrastructure.Persistence;
 using EventTix.Booking.Infrastructure.Persistence.Repositories;
+using EventTix.BuildingBlocks.Infrastructure.Locking;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

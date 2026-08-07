@@ -1,4 +1,6 @@
-namespace EventTix.BuildingBlocks.Domain.Exceptions;
+namespace EventTix.BuildingBlocks.Web;
+
+using EventTix.BuildingBlocks.Domain.Exceptions;
 
 using FluentValidation;
 using Microsoft.AspNetCore.Diagnostics;
