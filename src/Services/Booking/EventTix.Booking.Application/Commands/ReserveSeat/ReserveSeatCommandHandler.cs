@@ -66,7 +66,7 @@ public sealed class ReserveSeatCommandHandler : IRequestHandler<ReserveSeatComma
         var booking = Domain.Entities.Booking.CreatePending(seatId, userId, price);
 
         // 4. Persist the new aggregate via the repository and save changes atomically
-        await _bookingRepository.AddAsync(booking, cancellationToken);
+        _bookingRepository.Add(booking);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
 

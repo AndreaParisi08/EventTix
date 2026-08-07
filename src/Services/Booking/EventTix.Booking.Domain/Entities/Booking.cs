@@ -5,7 +5,7 @@ using EventTix.BuildingBlocks.Domain;
 
 namespace EventTix.Booking.Domain.Entities;
 
-public sealed class Booking : AggregateRoot<Guid>
+public sealed class Booking : AggregateRoot<BookingId>
 {
     public UserId UserId { get; private set; } 
     public SeatId SeatId { get; private set; } 
@@ -16,7 +16,7 @@ public sealed class Booking : AggregateRoot<Guid>
 
     private Booking() { }
 
-    private Booking(Guid id, SeatId seatId, UserId userId, Money price, TimeSpan holdDuration)
+    private Booking(BookingId id, SeatId seatId, UserId userId, Money price, TimeSpan holdDuration)
     {
         Id = id;
         SeatId = seatId;
@@ -27,7 +27,7 @@ public sealed class Booking : AggregateRoot<Guid>
         ExpiresAt = CreatedAt.Add(holdDuration);
 
         AddDomainEvent(new BookingReservedDomainEvent(
-            Id,
+            Id.Value,
             SeatId.Value,
             UserId.Value,
             Price.Amount,
@@ -39,7 +39,7 @@ public sealed class Booking : AggregateRoot<Guid>
     public static Booking CreatePending(SeatId seatId, UserId userId, Money price, TimeSpan? holdWindow = null)
     {
         var duration = holdWindow ?? TimeSpan.FromMinutes(5);
-        return new Booking(Guid.NewGuid(), seatId, userId, price, duration);
+        return new Booking(BookingId.New(), seatId, userId, price, duration);
     }
 
     public void Confirm()

@@ -4,6 +4,7 @@ using EventTix.Booking.Application.Abstractions;
 using EventTix.Booking.Infrastructure.Persistence;
 using EventTix.Booking.Infrastructure.Persistence.Repositories;
 using EventTix.BuildingBlocks.Infrastructure.Locking;
+using EventTix.BuildingBlocks.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -33,7 +34,7 @@ public static class DependencyInjection
 
         // 3. Persistence Layer (Repositories & Unit of Work)
         services.AddScoped<IBookingRepository, BookingRepository>();
-        services.AddScoped<IUnitOfWork, UnitOfWork>();
+        services.AddScoped<IUnitOfWork, UnitOfWork<BookingDbContext>>();
 
         return services;
     }

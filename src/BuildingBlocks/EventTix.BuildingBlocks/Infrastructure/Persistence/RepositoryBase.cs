@@ -1,21 +1,14 @@
-﻿using EventTix.BuildingBlocks.Domain;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 
-public abstract class RepositoryBase<TEntity, TId, TContext>
-    where TEntity : Entity<TId>
-    where TContext : DbContext
+namespace EventTix.BuildingBlocks.Infrastructure.Persistence;
+
+public abstract class RepositoryBase<TEntity> where TEntity : class
 {
-    protected readonly TContext DbContext;
+    protected readonly DbContext DbContext;
 
-    protected RepositoryBase(TContext dbContext)
+    protected RepositoryBase(DbContext dbContext)
     {
         DbContext = dbContext;
-    }
-
-    public async Task<TEntity?> GetByIdAsync(TId id, CancellationToken cancellationToken = default)
-    {
-        return await DbContext.Set<TEntity>()
-            .FirstOrDefaultAsync(e => e.Id!.Equals(id), cancellationToken);
     }
 
     public void Add(TEntity entity)

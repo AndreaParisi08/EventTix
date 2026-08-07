@@ -1,6 +1,8 @@
 ﻿using EventTix.Booking.Application.Abstractions;
 using Microsoft.EntityFrameworkCore;
 
+namespace EventTix.BuildingBlocks.Infrastructure.Persistence;
+
 public class UnitOfWork<TContext> : IUnitOfWork
     where TContext : DbContext
 {
