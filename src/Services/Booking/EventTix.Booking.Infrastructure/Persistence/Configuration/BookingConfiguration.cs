@@ -1,4 +1,4 @@
-﻿using EventTix.Booking.Domain.ValueObjects;
+using EventTix.Booking.Domain.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using BookingEntity = EventTix.Booking.Domain.Entities.Booking;
@@ -16,6 +16,15 @@ public sealed class BookingConfiguration : IEntityTypeConfiguration<BookingEntit
 
         // Primary Key
         builder.HasKey(b => b.Id);
+
+        // Convert Strongly-Typed BookingId to Guid. Without this, EF Core has no idea how to store
+        // a custom record struct and model building fails ("could not be mapped because the
+        // database provider does not support this type") — the same reason SeatId/UserId below
+        // already have their own conversions. Column name intentionally left as EF Core's default
+        // ("Id", matching the already-generated InitialCreate migration) rather than also renaming
+        // it to "id" here, to keep this fix scoped to just the mapping error.
+        builder.Property(b => b.Id)
+            .HasConversion(id => id.Value, value => BookingId.From(value));
 
         // Convert Strongly-Typed SeatId to string
         builder.Property(b => b.SeatId)

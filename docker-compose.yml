@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   # Database Relazionale principale per Booking, Catalog e Outbox Pattern
   postgres:

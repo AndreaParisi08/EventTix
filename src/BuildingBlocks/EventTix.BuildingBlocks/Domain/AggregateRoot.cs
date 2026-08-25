@@ -1,4 +1,4 @@
-﻿namespace EventTix.BuildingBlocks.Domain;
+namespace EventTix.BuildingBlocks.Domain;
 
 /// <summary>
 /// Represents an Aggregate Root in Domain-Driven Design (DDD).
@@ -7,7 +7,7 @@
 /// All external operations on objects within the aggregate must pass through this root entity.
 /// </summary>
 /// <typeparam name="TId">The type of the unique identifier for this aggregate root.</typeparam>
-public abstract class AggregateRoot<TId> : Entity<TId> where TId : notnull
+public abstract class AggregateRoot<TId> : Entity<TId>, IHasDomainEvents where TId : notnull
 {
     private readonly List<IDomainEvent> _domainEvents = [];
 
