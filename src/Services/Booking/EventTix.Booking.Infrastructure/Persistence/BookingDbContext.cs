@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+using EventTix.BuildingBlocks.Domain;
+using EventTix.BuildingBlocks.Infrastructure.Persistence;
+using Microsoft.EntityFrameworkCore;
 using BookingEntity = EventTix.Booking.Domain.Entities.Booking;
 
 namespace EventTix.Booking.Infrastructure.Persistence;
@@ -15,9 +17,17 @@ public sealed class BookingDbContext : DbContext
 
     public DbSet<BookingEntity> Bookings => Set<BookingEntity>();
 
+    public DbSet<OutboxMessage> OutboxMessages => Set<OutboxMessage>();
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(BookingDbContext).Assembly);
+
+        // OutboxMessage lives in the shared kernel (EventTix.BuildingBlocks), a different assembly
+        // than this DbContext, so the assembly scan above does not pick up its configuration —
+        // applied explicitly instead of switching to a second, easy-to-forget assembly scan.
+        modelBuilder.ApplyConfiguration(new OutboxMessageConfiguration());
+
         base.OnModelCreating(modelBuilder);
     }
 }
