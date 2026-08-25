@@ -1,4 +1,4 @@
-﻿namespace EventTix.Booking.Infrastructure;
+namespace EventTix.Booking.Infrastructure;
 
 using EventTix.Booking.Application.Abstractions;
 using EventTix.Booking.Infrastructure.Persistence;
@@ -29,8 +29,16 @@ public static class DependencyInjection
         var postgresConnection = configuration.GetConnectionString("Database")
             ?? throw new InvalidOperationException("Database connection string 'Database' is missing from configuration.");
 
-        services.AddDbContext<BookingDbContext>(options =>
-            options.UseNpgsql(postgresConnection));
+        // Registered as a normal DI service (not "new'd" inline below) so it resolves through the
+        // container like everything else — the idiomatic EF Core pattern for interceptors, and the
+        // only option once/if this interceptor ever needs a constructor dependency (a clock,
+        // a logger, ...) of its own. Singleton because it is stateless: it only reads/writes the
+        // DbContext instance handed to it per call, it holds nothing itself.
+        services.AddSingleton<OutboxSaveChangesInterceptor>();
+
+        services.AddDbContext<BookingDbContext>((serviceProvider, options) =>
+            options.UseNpgsql(postgresConnection)
+                .AddInterceptors(serviceProvider.GetRequiredService<OutboxSaveChangesInterceptor>()));
 
         // 3. Persistence Layer (Repositories & Unit of Work)
         services.AddScoped<IBookingRepository, BookingRepository>();
