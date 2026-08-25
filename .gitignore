@@ -365,3 +365,8 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+
+# EventTix — local environment overrides for docker-compose.yml (real values, even if dev-only).
+# See .env.example for the committed template.
+.env
+

@@ -4,15 +4,15 @@ services:
     image: postgres:16-alpine
     container_name: eventtix-postgres
     environment:
-      POSTGRES_USER: eventtix
-      POSTGRES_PASSWORD: eventtix_dev_password
-      POSTGRES_DB: eventtix_db
+      POSTGRES_USER: ${POSTGRES_USER:-eventtix}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-eventtix_dev_password}
+      POSTGRES_DB: ${POSTGRES_DB:-eventtix_db}
     ports:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U eventtix -d eventtix_db"]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-eventtix} -d ${POSTGRES_DB:-eventtix_db}"]
       interval: 5s
       timeout: 5s
       retries: 5
@@ -36,8 +36,8 @@ services:
     image: rabbitmq:3.12-management-alpine
     container_name: eventtix-rabbitmq
     environment:
-      RABBITMQ_DEFAULT_USER: eventtix
-      RABBITMQ_DEFAULT_PASS: eventtix_dev_password
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER:-eventtix}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD:-eventtix_dev_password}
     ports:
       - "5672:5672"   # AMQP protocol
       - "15672:15672" # Management UI
@@ -72,7 +72,7 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       # Sovrascrive i ConnectionString di appsettings.json usando il nome dei container Docker
-      - ConnectionStrings__Database=Host=postgres;Port=5432;Database=eventtix_db;Username=eventtix;Password=eventtix_dev_password
+      - ConnectionStrings__Database=Host=postgres;Port=5432;Database=${POSTGRES_DB:-eventtix_db};Username=${POSTGRES_USER:-eventtix};Password=${POSTGRES_PASSWORD:-eventtix_dev_password}
       - ConnectionStrings__Redis=redis:6379
     depends_on:
       postgres:

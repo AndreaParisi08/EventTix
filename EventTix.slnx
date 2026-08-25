@@ -12,5 +12,6 @@
   </Folder>
   <Folder Name="/tests/">
     <Project Path="tests/EventTix.Booking.UnitTests/EventTix.Booking.UnitTests.csproj" />
+    <Project Path="tests/EventTix.Booking.IntegrationTests/EventTix.Booking.IntegrationTests.csproj" />
   </Folder>
 </Solution>

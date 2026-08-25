@@ -8,8 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <!-- Test framework. No Testcontainers here on purpose: real unit tests should not need Docker
-         to run — that's what EventTix.Booking.IntegrationTests is for. -->
+    <!-- Test framework -->
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />
     <PackageReference Include="xunit" Version="2.9.2" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.8.2">
@@ -20,14 +19,21 @@
     <!-- Assertions. Pinned to the 7.x line deliberately: FluentAssertions 8+ requires a paid
          Xceed license for commercial use, which matters given this is portfolio/client work. -->
     <PackageReference Include="FluentAssertions" Version="7.0.0" />
+
+    <!-- Real, ephemeral Postgres/Redis containers — see BookingApiTestFixture.cs for why mocks
+         would prove nothing for a concurrency test. 4.14.0, not lower: earlier versions resolve
+         a vulnerable transitive SSH.NET (CVE-2026-48798, GHSA-q939-rpr3-3284). -->
+    <PackageReference Include="Testcontainers" Version="4.14.0" />
+    <PackageReference Include="Testcontainers.PostgreSql" Version="4.14.0" />
+    <PackageReference Include="Testcontainers.Redis" Version="4.14.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <!-- Application only (not Infrastructure): a unit test exercises domain/handler logic against
-         mocked ports (IBookingRepository, IUnitOfWork, IDistributedLockService, ...), never the real
-         EF Core/Redis implementations — depending on Infrastructure here would be a smell suggesting
-         a test belongs in IntegrationTests instead. Domain/BuildingBlocks flow through transitively. -->
+    <!-- Infrastructure is exactly what a UNIT test project should NOT depend on — it's the real
+         EF Core/Redis wiring, which is the whole point of an integration test. Domain, BuildingBlocks,
+         EF Core, Npgsql, MediatR, StackExchange.Redis all flow through transitively. -->
     <ProjectReference Include="..\..\src\Services\Booking\EventTix.Booking.Application\EventTix.Booking.Application.csproj" />
+    <ProjectReference Include="..\..\src\Services\Booking\EventTix.Booking.Infrastructure\EventTix.Booking.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>
