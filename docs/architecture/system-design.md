@@ -49,7 +49,7 @@ The domain is partitioned into 4 distinct Bounded Contexts:
 
 | Bounded Context | Core Responsibility | Primary Storage |
 |---|---|---|
-| **Booking Context** | High-concurrency seat reservation and order creation | PostgreSQL + Redis (Redlock) |
+| **Booking Context** | High-concurrency seat reservation and order creation | PostgreSQL + Redis (distributed lock) |
 | **Catalog Context** | Event, venue, and seat map topology management | PostgreSQL |
 | **Outbox Context** | Reliable asynchronous domain event publishing | PostgreSQL (`OutboxMessages` table) |
 | **Webhook / Saga Context** | Payment orchestration and organizer notification callbacks | RabbitMQ + State Machine |
@@ -58,9 +58,9 @@ The domain is partitioned into 4 distinct Bounded Contexts:
 
 ## 3. Key Architectural Patterns & Decisions
 
-1. **Distributed Concurrency Control (Redlock):** 
-   Requests targeting the same seat resource are intercepted at the memory layer via Redis Redlock before reaching database connections.
-   * See [ADR-0002: Redis Redlock vs SQL Locking](../adr/0002-redis-redlock-vs-sql-locking.md).
+1. **Distributed Concurrency Control (single-node Redis lock):** 
+   Requests targeting the same seat resource are intercepted at the memory layer via a Redis-based distributed lock before reaching database connections. Note: this is a single-node lock, not the multi-node Redlock quorum algorithm — a deliberate portfolio-scope trade-off, see the ADR below.
+   * See [ADR-0003: Distributed Locking via Redis vs SQL Locking](../adr/0003-redis-redlock-vs-sql-locking.md).
    * See [Sequence Diagram: Seat Contention](./diagrams/sequence-race-condition.md).
 
 2. **Distributed Transaction Management (Saga Orchestration):** 
@@ -75,5 +75,11 @@ The domain is partitioned into 4 distinct Bounded Contexts:
 ## 4. Architectural Decision Records (ADR Index)
 
 * [ADR-0000: ADR Template](../adr/0000-template.md)
-* [ADR-0001: Saga Orchestration vs. Choreography](../adr/0001-saga-orchestration-vs-choreography.md)
-* [ADR-0002: Distributed Locking Strategy (Redis Redlock)](../adr/0002-redis-redlock-vs-sql-locking.md)
+* [ADR-0001: CQRS / Minimal APIs vs. N-Tier Controllers](../adr/0001-cqrs-minimal-apis-vs-ntier-controllers.md)
+* [ADR-0002: Value Objects as Readonly Record Structs](../adr/0002-value-objects-readonly-record-structs.md)
+* [ADR-0003: Distributed Locking via Redis (single-node) vs. SQL Locking](../adr/0003-redis-redlock-vs-sql-locking.md)
+* [ADR-0004: Hybrid ORM — EF Core Writes, Dapper Reads](../adr/0004-hybrid-orm-efcore-writes-dapper-reads.md)
+* [ADR-0005: Saga Orchestration vs. Choreography](../adr/0005-saga-orchestration-vs-choreography.md)
+* [ADR-0006: Repository per Aggregate vs. Generic Repository](../adr/0006-repository-per-aggregate-vs-generic-repository.md)
+
+Note: `docs/adr/0002-redis-redlock-vs-sql-locking.md` is a stray, empty (0-byte) duplicate left over from an earlier renumbering — `0003-redis-redlock-vs-sql-locking.md` is the real, current one. Safe to delete the stray file; harmless if left, since nothing links to it after this fix.
